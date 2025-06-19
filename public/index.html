@@ -2,42 +2,213 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <!-- Custom NeuroClai Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad1)' stroke='white' stroke-width='3'/%3E%3Cpath d='M30 35 Q50 20 70 35 Q65 50 50 45 Q35 50 30 35' fill='white' opacity='0.9'/%3E%3Ccircle cx='35' cy='40' r='3' fill='white'/%3E%3Ccircle cx='50' cy='35' r='3' fill='white'/%3E%3Ccircle cx='65' cy='40' r='3' fill='white'/%3E%3Cpath d='M25 55 Q35 65 45 55 M35 65 Q45 75 55 65 M45 55 Q55 65 65 55 M55 65 Q65 75 75 65' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    
+    <!-- Fallback ICO favicon for older browsers -->
+    <link rel="alternate icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD4+PgA9fX1APr6+gD///8A////AP///wD///8A////AP///wD///8A////AP///wD6+voA5ubmAMzMzADQ0NAA7+/vAPz8/AD///8A////AP///wD///8A////AP///wD///8A////APf39wDDw8MAhYWFAIODgwCFhYUAr6+vAOvr6wD9/f0A////AP///wD///8A////AP///wD///8A8fHxAKWlpQBycnIAcnJyAHJycgBycnIAcnJyAJeXlwDm5uYA+/v7AP///wD///8A////AP///wDu7u4AmZmZAHNzcwB6enoAfHx8AHx8fAB6enoAeHh4AHNzcwCUlJQA6enpAP7+/gD///8A////APLy8gCXl5cAdXV1AH19fQCBgYEAhISEAISEhACBgYEAfX19AHh4eAB1dXUAlJSUAPHx8QD+/v4A+fn5AJubmwB4eHgAf39/AIWFhQCJiYkAi4uLAIuLiwCJiYkAhYWFAH9/fwB4eHgAmZmZAPn5+QD6+voAm5ubAHl5eQCAgIAAhoaGAIqKigCMjIwAjIyMAIqKigCGhoYAgICAAHl5eQCbm5sA+vr6APr6+gCbm5sAeXl5AICAgACGhoYAioqKAIyMjACMjIwAioqKAIaGhgCAgIAAeXl5AJubmwD6+voA+fn5AJubmwB4eHgAf39/AIWFhQCJiYkAi4uLAIuLiwCJiYkAhYWFAH9/fwB4eHgAmZmZAPn5+QD+/v4A8vLyAJeXlwB1dXUAfX19AIGBgQCEhIQAhISEAIGBgQB9fX0AeHh4AHV1dQCUlJQA8fHxAP///wD///8A7u7uAJmZmQBzc3MAenp6AHx8fAB8fHwAenp6AHh4eABzc3MAlJSUAOnp6QD+/v4A////AP///wD///8A8fHxAKWlpQBycnIAcnJyAHJycgBycnIAcnJyAJeXlwDm5uYA+/v7AP///wD///8A////AP///wD///8A9/f3AMPDwwCFhYUAg4ODAIWFhQCvr68A6+vrAP39/QD///8A////AP///wD///8A////AP///wD///8A////APr6+gDm5uYAzMzMANDQ0ADv7+8A/Pz8AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD4+PgA9fX1APr6+gD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="60x60" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="72x72" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="76x76" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="114x114" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="120x120" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="144x144" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="152x152" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M25 30 Q50 15 75 30 Q70 45 50 40 Q30 45 25 30' fill='white' opacity='0.9'/%3E%3Ccircle cx='30' cy='35' r='3' fill='white'/%3E%3Ccircle cx='50' cy='30' r='3' fill='white'/%3E%3Ccircle cx='70' cy='35' r='3' fill='white'/%3E%3Cpath d='M20 55 Q30 65 40 55 M30 65 Q40 75 50 65 M40 55 Q50 65 60 55 M50 65 Q60 75 70 65 M60 55 Q70 65 80 55' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- Standard meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="msapplication-TileColor" content="#4F46E5" />
+    <meta name="msapplication-navbutton-color" content="#4F46E5" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!-- Enhanced meta tags for NeuroClaim -->
+    <meta name="description" content="NeuroClaim - AI-powered intelligent claims processing system with advanced fraud detection, automated document analysis, and smart categorization for insurance companies." />
+    <meta name="keywords" content="NeuroClaim, AI claims processing, fraud detection, insurance automation, neural networks, machine learning, claims management, document analysis" />
+    <meta name="author" content="NeuroClaim Technologies" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph meta tags for social sharing -->
+    <meta property="og:title" content="NeuroClaim - AI-Powered Claims Processing" />
+    <meta property="og:description" content="Revolutionary AI system that transforms insurance claims processing with intelligent automation, fraud detection, and neural network analysis." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='url(%23grad1)'/%3E%3Ctext x='600' y='250' font-family='Arial, sans-serif' font-size='72' font-weight='bold' text-anchor='middle' fill='white'%3ENeuroClaim%3C/text%3E%3Ctext x='600' y='320' font-family='Arial, sans-serif' font-size='36' text-anchor='middle' fill='white' opacity='0.9'%3EAI-Powered Claims Processing%3C/text%3E%3Ctext x='600' y='380' font-family='Arial, sans-serif' font-size='24' text-anchor='middle' fill='white' opacity='0.8'%3EIntelligent • Automated • Secure%3C/text%3E%3Ccircle cx='200' cy='150' r='50' fill='white' opacity='0.1'/%3E%3Ccircle cx='1000' cy='480' r='70' fill='white' opacity='0.1'/%3E%3Ccircle cx='100' cy='500' r='30' fill='white' opacity='0.1'/%3E%3C/svg%3E" />
+    <meta property="og:url" content="https://NeuroClaimms.ai" />
+    <meta property="og:site_name" content="NeuroClaim" />
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NeuroClaim - AI-Powered Claims Processing" />
+    <meta name="twitter:description" content="Revolutionary AI system that transforms insurance claims processing with intelligent automation and fraud detection." />
+    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234F46E5;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%237C3AED;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23059669;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='url(%23grad1)'/%3E%3Ctext x='600' y='250' font-family='Arial, sans-serif' font-size='72' font-weight='bold' text-anchor='middle' fill='white'%3ENeuroClaim%3C/text%3E%3Ctext x='600' y='320' font-family='Arial, sans-serif' font-size='36' text-anchor='middle' fill='white' opacity='0.9'%3EAI-Powered Claims Processing%3C/text%3E%3Ctext x='600' y='380' font-family='Arial, sans-serif' font-size='24' text-anchor='middle' fill='white' opacity='0.8'%3EIntelligent • Automated • Secure%3C/text%3E%3Ccircle cx='200' cy='150' r='50' fill='white' opacity='0.1'/%3E%3Ccircle cx='1000' cy='480' r='70' fill='white' opacity='0.1'/%3E%3Ccircle cx='100' cy='500' r='30' fill='white' opacity='0.1'/%3E%3C/svg%3E" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22NeuroClaim%20-%20AI%20Claims%20Processing%22%2C%22short_name%22%3A%22NeuroClaim%22%2C%22description%22%3A%22AI-powered%20intelligent%20claims%20processing%20system%22%2C%22start_url%22%3A%22/%22%2C%22display%22%3A%22standalone%22%2C%22theme_color%22%3A%22%234F46E5%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage/svg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A//www.w3.org/2000/svg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Cdefs%253E%253ClinearGradient%2520id%253D%2527grad1%2527%2520x1%253D%25270%2525%2527%2520y1%253D%25270%2525%2527%2520x2%253D%2527100%2525%2527%2520y2%253D%2527100%2525%2527%253E%253Cstop%2520offset%253D%25270%2525%2527%2520style%253D%2527stop-color%253A%25234F46E5%253Bstop-opacity%253A1%2527%2520/%253E%253Cstop%2520offset%253D%252750%2525%2527%2520style%253D%2527stop-color%253A%25237C3AED%253Bstop-opacity%253A1%2527%2520/%253E%253Cstop%2520offset%253D%2527100%2525%2527%2520style%253D%2527stop-color%253A%2523059669%253Bstop-opacity%253A1%2527%2520/%253E%253C/linearGradient%253E%253C/defs%253E%253Crect%2520width%253D%2527100%2527%2520height%253D%2527100%2527%2520rx%253D%252720%2527%2520fill%253D%2527url%2528%2523grad1%2529%2527/%253E%253Cpath%2520d%253D%2527M25%252030%2520Q50%252015%252075%252030%2520Q70%252045%252050%252040%2520Q30%252045%252025%252030%2527%2520fill%253D%2527white%2527%2520opacity%253D%25270.9%2527/%253E%253Ccircle%2520cx%253D%252730%2527%2520cy%253D%252735%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Ccircle%2520cx%253D%252750%2527%2520cy%253D%252730%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Ccircle%2520cx%253D%252770%2527%2520cy%253D%252735%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Cpath%2520d%253D%2527M20%252055%2520Q30%252065%252040%252055%2520M30%252065%2520Q40%252075%252050%252065%2520M40%252055%2520Q50%252065%252060%252055%2520M50%252065%2520Q60%252075%252070%252065%2520M60%252055%2520Q70%252065%252080%252055%2527%2520stroke%253D%2527white%2527%2520stroke-width%253D%25272%2527%2520fill%253D%2527none%2527%2520opacity%253D%25270.8%2527/%253E%253C/svg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/svg%2Bxml%22%7D%2C%7B%22src%22%3A%22data%3Aimage/svg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A//www.w3.org/2000/svg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Cdefs%253E%253ClinearGradient%2520id%253D%2527grad1%2527%2520x1%253D%25270%2525%2527%2520y1%253D%25270%2525%2527%2520x2%253D%2527100%2525%2527%2520y2%253D%2527100%2525%2527%253E%253Cstop%2520offset%253D%25270%2525%2527%2520style%253D%2527stop-color%253A%25234F46E5%253Bstop-opacity%253A1%2527%2520/%253E%253Cstop%2520offset%253D%252750%2525%2527%2520style%253D%2527stop-color%253A%25237C3AED%253Bstop-opacity%253A1%2527%2520/%253E%253Cstop%2520offset%253D%2527100%2525%2527%2520style%253D%2527stop-color%253A%2523059669%253Bstop-opacity%253A1%2527%2520/%253E%253C/linearGradient%253E%253C/defs%253E%253Crect%2520width%253D%2527100%2527%2520height%253D%2527100%2527%2520rx%253D%252720%2527%2520fill%253D%2527url%2528%2523grad1%2529%2527/%253E%253Cpath%2520d%253D%2527M25%252030%2520Q50%252015%252075%252030%2520Q70%252045%252050%252040%2520Q30%252045%252025%252030%2527%2520fill%253D%2527white%2527%2520opacity%253D%25270.9%2527/%253E%253Ccircle%2520cx%253D%252730%2527%2520cy%253D%252735%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Ccircle%2520cx%253D%252750%2527%2520cy%253D%252730%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Ccircle%2520cx%253D%252770%2527%2520cy%253D%252735%2527%2520r%253D%25273%2527%2520fill%253D%2527white%2527/%253E%253Cpath%2520d%253D%2527M20%252055%2520Q30%252065%252040%252055%2520M30%252065%2520Q40%252075%252050%252065%2520M40%252055%2520Q50%252065%252060%252055%2520M50%252065%2520Q60%252075%252070%252065%2520M60%252055%2520Q70%252065%252080%252055%2527%2520stroke%253D%2527white%2527%2520stroke-width%253D%25272%2527%2520fill%253D%2527none%2527%2520opacity%253D%25270.8%2527/%253E%253C/svg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image/svg%2Bxml%22%7D%5D%7D" />
+    
+    <!-- Preconnect to external resources for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Google Fonts for enhanced typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Custom CSS for enhanced styling -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      
+      /* Loading screen */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #059669 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+      }
+      
+      .loading-screen.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      
+      .loading-logo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 24px;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-text {
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        font-family: 'Space Grotesk', sans-serif;
+        margin-bottom: 8px;
+      }
+      
+      .loading-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 16px;
+        font-weight: 400;
+        margin-bottom: 32px;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      #root {
+        min-height: 100vh;
+      }
+      
+      /* Ensure responsive design */
+      @media (max-width: 768px) {
+        .loading-text {
+          font-size: 20px;
+        }
+        .loading-subtitle {
+          font-size: 14px;
+        }
+      }
+    </style>
+    
+    <title>NeuroClaim - AI-Powered Intelligent Claims Processing</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #059669 100%); color: white; text-align: center; font-family: Arial, sans-serif;">
+        <div>
+          <h1>NeuroClaim</h1>
+          <p>You need to enable JavaScript to run this application.</p>
+          <p>Please enable JavaScript in your browser settings and refresh the page.</p>
+        </div>
+      </div>
+    </noscript>
+    
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <svg class="loading-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#f8fafc;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+        <path d="M30 35 Q50 20 70 35 Q65 50 50 45 Q35 50 30 35" fill="url(#logoGrad)" opacity="0.9"/>
+        <circle cx="35" cy="40" r="3" fill="white"/>
+        <circle cx="50" cy="35" r="3" fill="white"/>
+        <circle cx="65" cy="40" r="3" fill="white"/>
+        <path d="M25 55 Q35 65 45 55 M35 65 Q45 75 55 65 M45 55 Q55 65 65 55 M55 65 Q65 75 75 65" stroke="white" stroke-width="2" fill="none" opacity="0.8"/>
+      </svg>
+      <div class="loading-text">NeuroClaim</div>
+      <div class="loading-subtitle">AI-Powered Claims Processing</div>
+      <div class="loading-spinner"></div>
+    </div>
+    
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    
+    <!-- Loading Script -->
+    <script>
+      // Hide loading screen when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loadingScreen');
+          if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+            // Remove from DOM after transition
+            setTimeout(function() {
+              loadingScreen.remove();
+            }, 500);
+          }
+        }, 1500); // Show loading screen for 1.5 seconds
+      });
+      
+      // Analytics and performance monitoring (placeholder)
+      window.neuroclaim = {
+        version: '1.0.0',
+        initialized: new Date().toISOString(),
+        features: ['ai-processing', 'fraud-detection', 'smart-categorization']
+      };
+    </script>
   </body>
 </html>
