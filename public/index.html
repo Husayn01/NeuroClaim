@@ -2,192 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- Custom NeuroClaim Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2364b3f4;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%239333ea;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23grad1)'/%3E%3Cpath d='M30 35h10v30h-10zM45 25h10v40h-10zM60 30h10v40h-10z' fill='white' opacity='0.9'/%3E%3Ccircle cx='25' cy='75' r='3' fill='white'/%3E%3Ccircle cx='40' cy='75' r='3' fill='white'/%3E%3Ccircle cx='55' cy='75' r='3' fill='white'/%3E%3Ccircle cx='70' cy='75' r='3' fill='white'/%3E%3Cpath d='M25 75L40 65L55 70L70 60' stroke='white' stroke-width='2' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
-    
-    <!-- Fallback ICO favicon -->
-    <link rel="alternate icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AMTExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/////wDExMT/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/8TExP////8AxMTE/2ZmZv//////////////////////////////////////////////////////////////////////////////////////////////////////ZmZm/8TExP////8AxMTE/2ZmZv////////////////////////////////////////////////////////////////////////////9mZmb/xMTE/////wDExMT/ZmZm///////////////////////IyMj/yMjI/8jIyP/IyMj/yMjI/8jIyP//////////////////////ZmZm/8TExP////8AxMTE/2ZmZv//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////ZmZm/8TExP////8AxMTE/2ZmZv//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////ZmZm/8TExP////8AxMTE/2ZmZv//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////ZmZm/8TExP////8AxMTE/2ZmZv//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////yMjI/8jIyP//////ZmZm/8TExP////8AxMTE/2ZmZv//////yMjI/8jIyP/IyMj/yMjI/8jIyP/IyMj/yMjI/8jIyP/IyMj/yMjI/8jIyP//////ZmZm/8TExP////8AxMTE/2ZmZv//////////////////////////////////////////////////////////////////////ZmZm/8TExP////8AxMTE/2ZmZv/u7u7/7u7u/+7u7v/u7u7/7u7u/+7u7v/u7u7/7u7u/+7u7v/u7u7/7u7u/+7u7v9mZmb/xMTE/////wDExMT/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv9mZmb/ZmZm/2ZmZv/ExMT/////AMTExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/8TExP/ExMT/xMTE/////wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" />
-    
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#6366f1" />
+    <meta name="theme-color" content="#4F46E5" />
     <meta
       name="description"
-      content="NeuroClaim - AI-powered intelligent claims processing system with advanced fraud detection and neural network analysis. Streamline your insurance claims workflow with cutting-edge artificial intelligence."
+      content="Neuroclaim - AI-powered claims processing system for intelligent document analysis, fraud detection, and automated decision making in insurance claims."
     />
-    <meta name="keywords" content="AI claims processing, fraud detection, insurance technology, neural networks, automated claims, NeuroClaim" />
-    <meta name="author" content="NeuroClaim Technologies" />
+    <meta name="keywords" content="AI, insurance, claims processing, fraud detection, document analysis, artificial intelligence, automation" />
+    <meta name="author" content="Neuroclaim Team" />
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="NeuroClaim - AI-Powered Claims Processing" />
-    <meta property="og:description" content="Revolutionary AI-powered claims processing system with advanced fraud detection and neural network analysis." />
+    <meta property="og:title" content="Neuroclaim - AI-Powered Claims Processing" />
+    <meta property="og:description" content="Transform insurance claims processing with intelligent AI that extracts information, detects fraud, and automates decisions in seconds." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2364b3f4;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%239333ea;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='url(%23grad1)'/%3E%3Ctext x='600' y='280' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='72' font-weight='bold'%3ENeuroClaim%3C/text%3E%3Ctext x='600' y='350' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='36' opacity='0.9'%3EAI-Powered Claims Processing%3C/text%3E%3Cpath d='M300 400h100v80h-100zM450 380h100v100h-100zM600 390h100v100h-100zM750 375h100v110h-100z' fill='white' opacity='0.8'/%3E%3C/svg%3E" />
+    <meta property="og:url" content="https://husayn01.github.io/NeuroClaim/" />
+  
     
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="NeuroClaim - AI-Powered Claims Processing" />
-    <meta name="twitter:description" content="Revolutionary AI-powered claims processing system with advanced fraud detection." />
-    <meta name="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2364b3f4;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%239333ea;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='url(%23grad1)'/%3E%3Ctext x='600' y='280' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='72' font-weight='bold'%3ENeuroClaim%3C/text%3E%3Ctext x='600' y='350' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='36' opacity='0.9'%3EAI-Powered Claims Processing%3C/text%3E%3Cpath d='M300 400h100v80h-100zM450 380h100v100h-100zM600 390h100v100h-100zM750 375h100v110h-100z' fill='white' opacity='0.8'/%3E%3C/svg%3E" />
-    
-    <!-- Apple Touch Icon (High Resolution) -->
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2364b3f4;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%239333ea;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='url(%23grad1)'/%3E%3Cpath d='M50 60h20v60h-20zM80 40h20v80h-20zM110 50h20v80h-20z' fill='white' opacity='0.9'/%3E%3Ccircle cx='45' cy='140' r='6' fill='white'/%3E%3Ccircle cx='75' cy='140' r='6' fill='white'/%3E%3Ccircle cx='105' cy='140' r='6' fill='white'/%3E%3Ccircle cx='135' cy='140' r='6' fill='white'/%3E%3Cpath d='M45 140L75 125L105 130L135 115' stroke='white' stroke-width='4' fill='none' opacity='0.8'/%3E%3C/svg%3E" />
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk5ldXJvQ2xhaSAtIEFJLVBvd2VyZWQgQ2xhaW1zIFByb2Nlc3NpbmciLAogICJzaG9ydF9uYW1lIjogIk5ldXJvQ2xhaSIsCiAgImRlc2NyaXB0aW9uIjogIlJldm9sdXRpb25hcnkgQUktcG93ZXJlZCBjbGFpbXMgcHJvY2Vzc2luZyBzeXN0ZW0gd2l0aCBhZHZhbmNlZCBmcmF1ZCBkZXRlY3Rpb24iLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgInRoZW1lX2NvbG9yIjogIiM2MzY2ZjEiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmOGZhZmMiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdC1wcmltYXJ5IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxOTIgMTkyJyUzRSUzQ2RlZnMlM0UlM0NsaW5lYXJHcmFkaWVudCBpZD0nZ3JhZDEnIHgxPScwJTI1JyB5MT0nMCUyNScgeDI9JzEwMCUyNScgeTI9JzEwMCUyNSclM0UlM0NzdG9wIG9mZnNldD0nMCUyNScgc3R5bGU9J3N0b3AtY29sb3I6JTI1NjRiM2Y0O3N0b3Atb3BhY2l0eToxJyAlMkYlM0UlM0NzdG9wIG9mZnNldD0nMTAwJTI1JyBzdHlsZT0nc3RvcC1jb2xvcjolMjU5MzMzZWE7c3RvcC1vcGFjaXR5OjEnICUyRiUzRSUzQyUyRmxpbmVhckdyYWRpZW50JTNFJTNDJTJGZGVmcyUzRSUzQ3JlY3Qgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInIHJ4PSc0MCcgZmlsbD0ndXJsKCUyM2dyYWQxKSclMkYlM0UlM0NwYXRoIGQ9J001MCA2MGgyMHY2MGgtMjB6TTgwIDQwaDIwdjgwaC0yMHpNMTEwIDUwaDIwdjgwaC0yMHonIGZpbGw9J3doaXRlJyBvcGFjaXR5PScwLjknJTJGJTNFJTNDY2lyY2xlIGN4PSc0NScgY3k9JzE0MCcgcj0nNicgZmlsbD0nd2hpdGUnJTJGJTNFJTNDY2lyY2xlIGN4PSc3NScgY3k9JzE0MCcgcj0nNicgZmlsbD0nd2hpdGUnJTJGJTNFJTNDY2lyY2xlIGN4PScxMDUnIGN5PScxNDAnIHI9JzYnIGZpbGw9J3doaXRlJyUyRiUzRSUzQ2NpcmNsZSBjeD0nMTM1JyBjeT0nMTQwJyByPSc2JyBmaWxsPSd3aGl0ZSclMkYlM0UlM0NwYXRoIGQ9J000NSAxNDBMNzUgMTI1TDEwNSAxMzBMMTM1IDExNScgc3Ryb2tlPSd3aGl0ZScgc3Ryb2tlLXdpZHRoPSc0JyBmaWxsPSdub25lJyBvcGFjaXR5PScwLjgnJTJGJTNFJTNDJTJGc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDUxMiA1MTInJTNFJTNDZGVmcyUzRSUzQ2xpbmVhckdyYWRpZW50IGlkPSdncmFkMScgeDE9JzAlMjUnIHkxPScwJTI1JyB4Mj0nMTAwJTI1JyB5Mj0nMTAwJTI1JyUzRSUzQ3N0b3Agb2Zmc2V0PScwJTI1JyBzdHlsZT0nc3RvcC1jb2xvcjolMjU2NGIzZjQ7c3RvcC1vcGFjaXR5OjEnICUyRiUzRSUzQ3N0b3Agb2Zmc2V0PScxMDAlMjUnIHN0eWxlPSdzdG9wLWNvbG9yOiUyNTkzMzNlYTtzdG9wLW9wYWNpdHk6MScgJTJGJTNFJTNDJTJGbGluZWFyR3JhZGllbnQlM0UlM0MlMkZkZWZzJTNFJTNDcmVjdCB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgcng9JzEwMCcgZmlsbD0ndXJsKCUyM2dyYWQxKSclMkYlM0UlM0NwYXRoIGQ9J00xMzAgMTYwaDUwdjE2MGgtNTB6TTE5MCAxMjBoNTB2MjAwaC01MHpNMjUwIDEzNWg1MHYyMDBoLTUweicgZmlsbD0nd2hpdGUnIG9wYWNpdHk9JzAuOSclMkYlM0UlM0NjaXJjbGUgY3g9JzEyMCcgY3k9JzM3Micgcj0nMTUnIGZpbGw9J3doaXRlJyUyRiUzRSUzQ2NpcmNsZSBjeD0nMTkwJyBjeT0nMzcyJyByPScxNScgZmlsbD0nd2hpdGUnJTJGJTNFJTNDY2lyY2xlIGN4PSc2MCcgY3k9JzM3Micgcj0nMTUnIGZpbGw9J3doaXRlJyUyRiUzRSUzQ2NpcmNsZSBjeD0nMzMwJyBjeT0nMzcyJyByPScxNScgZmlsbD0nd2hpdGUnJTJGJTNFJTNDcGF0aCBkPSdNMTIwIDM3MkwxOTAgMzQyTDI2MCAzNTJMMzMwIDMyMicgc3Ryb2tlPSd3aGl0ZScgc3Ryb2tlLXdpZHRoPScxMCcgZmlsbD0nbm9uZScgb3BhY2l0eT0nMC44JyUyRiUzRSUzQyUyRnN2ZyUzRSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdLAogICJjYXRlZ29yaWVzIjogWyJmaW5hbmNlIiwgImJ1c2luZXNzIiwgInByb2R1Y3Rpdml0eSJdCn0=" />
-    
-    <!-- Preconnect to improve performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <!-- Google Fonts for better typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    
-    <!-- Additional meta tags for better SEO -->
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-    <meta name="language" content="English" />
-    <meta name="revisit-after" content="7 days" />
-    
-    <!-- Structured Data for Search Engines -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "NeuroClaim",
-      "description": "AI-powered intelligent claims processing system with advanced fraud detection and neural network analysis",
-      "url": "https://NeuroClaimm.com",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "150"
-      }
-    }
-    </script>
-    
-    <title>NeuroClaim - AI-Powered Claims Processing System | Advanced Fraud Detection</title>
-    
-    <!-- Custom CSS for enhanced styling -->
-    <style>
-      body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        min-height: 100vh;
-      }
-      
-      /* Loading animation */
-      .loading-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-      }
-      
-      .loading-container.hidden {
-        opacity: 0;
-        visibility: hidden;
-      }
-      
-      .loading-logo {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 20px;
-        animation: pulse 2s infinite;
-      }
-      
-      .loading-text {
-        color: white;
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 10px;
-      }
-      
-      .loading-subtitle {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 16px;
-        font-weight: 400;
-      }
-      
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-      }
-      
-      /* Hide root initially */
-      #root {
-        opacity: 0;
-        transition: opacity 0.5s ease-in;
-      }
-      
-      #root.loaded {
-        opacity: 1;
-      }
-    </style>
+    <title>Neuroclaim - AI-Powered Claims Processing System</title>
   </head>
   <body>
-    <noscript>
-      <div style="background: #fee2e2; color: #991b1b; padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-        <h2>JavaScript Required</h2>
-        <p>NeuroClaim requires JavaScript to function properly. Please enable JavaScript in your browser and reload the page.</p>
-      </div>
-    </noscript>
-    
-    <!-- Loading Screen -->
-    <div class="loading-container" id="loadingScreen">
-      <svg class="loading-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-        <defs>
-          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <rect width="100" height="100" rx="20" fill="url(#grad1)" opacity="0.2"/>
-        <path d="M30 35h10v30h-10zM45 25h10v40h-10zM60 30h10v40h-10z" fill="white" opacity="0.9"/>
-        <circle cx="25" cy="75" r="3" fill="white"/>
-        <circle cx="40" cy="75" r="3" fill="white"/>
-        <circle cx="55" cy="75" r="3" fill="white"/>
-        <circle cx="70" cy="75" r="3" fill="white"/>
-        <path d="M25 75L40 65L55 70L70 60" stroke="white" stroke-width="2" fill="none" opacity="0.8"/>
-      </svg>
-      <div class="loading-text">NeuroClaim</div>
-      <div class="loading-subtitle">Loading AI-Powered Claims Processing...</div>
-    </div>
-    
     <div id="root"></div>
-    
-    <!-- Initialize loading behavior -->
-    <script>
-      // Hide loading screen after a delay or when content is ready
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          const loadingScreen = document.getElementById('loadingScreen');
-          const root = document.getElementById('root');
-          
-          loadingScreen.classList.add('hidden');
-          root.classList.add('loaded');
-        }, 1500); // Show loading for 1.5 seconds minimum
-      });
-      
-      // Error handling for React app
-      window.addEventListener('error', function(e) {
-        console.error('Application error:', e.error);
-      });
-    </script>
   </body>
 </html>
