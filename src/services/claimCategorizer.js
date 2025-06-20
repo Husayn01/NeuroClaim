@@ -1,4 +1,5 @@
-export class ClaimCategorizer {
+// services/claimCategorizer.js
+class ClaimCategorizer {
   constructor(openAIClient) {
     this.client = openAIClient;
   }
@@ -30,13 +31,15 @@ Provide categorization and prioritization in this JSON format:
     "assignmentType": "automated|junior_adjuster|senior_adjuster|specialist|investigation_team",
     "estimatedHandlingTime": "1-2 hours|1-2 days|3-5 days|1-2 weeks|extended_investigation"
   },
-  "processignRecommendations": [
+  "processingRecommendations": [
     "specific recommendations for processing this claim"
   ],
   "nextSteps": [
     "immediate actions required"
   ]
 }
+
+Return only valid JSON without any additional text or formatting.
 `;
 
     try {
@@ -58,3 +61,7 @@ Provide categorization and prioritization in this JSON format:
     }
   }
 }
+
+// ADD THIS EXPORT
+export default ClaimCategorizer;
+export { ClaimCategorizer };

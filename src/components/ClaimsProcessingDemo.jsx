@@ -17,126 +17,20 @@ import {
   TrendingUp,
   Users,
   DollarSign,
-  Activity
+  Activity,
+  File,
+  X,
+  Paperclip
 } from 'lucide-react';
 
-// Mock implementation of ClaimsProcessingSystem for demo
-class MockClaimsSystem {
-  constructor() {
-    this.processedClaims = new Map();
-  }
+// Import services
+import { OPENAI_CONFIG } from '../config/openai.js';
+import { ClaimsProcessingSystem } from '../services/claimsOrchestrator.js';
 
-  async processClaimComplete(documentText, options = {}) {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
-    
-    const processingId = `claim_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Mock extracted data based on document content
-    const extractedData = {
-      claimNumber: "CLM-2025-" + Math.floor(Math.random() * 10000),
-      policyNumber: "POL-" + Math.floor(Math.random() * 100000),
-      claimantName: "John Doe",
-      dateOfIncident: "2025-06-15",
-      dateOfClaim: "2025-06-18",
-      claimType: documentText.toLowerCase().includes('auto') ? 'auto' : 
-                 documentText.toLowerCase().includes('health') ? 'health' : 'property',
-      damageDescription: documentText.substring(0, 200) + "...",
-      estimatedAmount: Math.floor(Math.random() * 50000) + 1000,
-      confidence: Math.random() > 0.3 ? 'high' : 'medium'
-    };
+// Create system instance
+const enhancedSystem = new ClaimsProcessingSystem();
 
-    const fraudAssessment = {
-      riskLevel: Math.random() > 0.7 ? 'high' : Math.random() > 0.4 ? 'medium' : 'low',
-      riskScore: Math.floor(Math.random() * 100),
-      fraudIndicators: Math.random() > 0.5 ? [
-        { indicator: "Claim amount above average", weight: "medium", explanation: "Amount is 30% higher than typical for this incident type" }
-      ] : [],
-      overallAssessment: "Based on the analysis of provided documentation and incident details, this claim shows standard risk patterns.",
-      confidence: "high"
-    };
-
-    const categorization = {
-      category: {
-        primary: extractedData.claimType + '_claims',
-        complexity: Math.random() > 0.6 ? 'complex' : 'standard'
-      },
-      priority: {
-        level: fraudAssessment.riskLevel === 'high' ? 'urgent' : 'normal',
-        score: Math.floor(Math.random() * 10) + 1
-      },
-      routing: {
-        department: extractedData.claimType + '_claims',
-        assignmentType: fraudAssessment.riskLevel === 'high' ? 'specialist' : 'junior_adjuster',
-        estimatedHandlingTime: '1-2 days'
-      }
-    };
-
-    const summary = {
-      executiveSummary: `${extractedData.claimType.charAt(0).toUpperCase() + extractedData.claimType.slice(1)} claim for $${extractedData.estimatedAmount.toLocaleString()} submitted by ${extractedData.claimantName}.`,
-      keyDetails: {
-        claimant: extractedData.claimantName,
-        incident: extractedData.damageDescription.substring(0, 100) + "...",
-        damages: `$${extractedData.estimatedAmount.toLocaleString()}`,
-        riskFactors: fraudAssessment.riskLevel + " risk level"
-      },
-      processingStatus: "Ready for " + categorization.routing.assignmentType,
-      timeline: categorization.routing.estimatedHandlingTime
-    };
-
-    const result = {
-      processingId,
-      timestamp: new Date().toISOString(),
-      processingTimeMs: 3500,
-      status: 'completed',
-      originalDocument: documentText,
-      extractedData,
-      fraudAssessment,
-      categorization,
-      summary,
-      recommendedActions: [
-        {
-          type: 'routing',
-          priority: categorization.priority.level,
-          action: `Route to ${categorization.routing.department}`,
-          details: [`Assign to: ${categorization.routing.assignmentType}`]
-        }
-      ]
-    };
-
-    this.processedClaims.set(processingId, result);
-    return { success: true, result };
-  }
-
-  getAllClaims() {
-    return Array.from(this.processedClaims.values());
-  }
-
-  getClaim(id) {
-    return this.processedClaims.get(id);
-  }
-
-  generateAnalytics() {
-    const claims = this.getAllClaims();
-    return {
-      totalClaims: claims.length,
-      averageProcessingTime: 3200,
-      riskDistribution: claims.reduce((acc, claim) => {
-        acc[claim.fraudAssessment.riskLevel] = (acc[claim.fraudAssessment.riskLevel] || 0) + 1;
-        return acc;
-      }, {}),
-      claimTypeDistribution: claims.reduce((acc, claim) => {
-        acc[claim.extractedData.claimType] = (acc[claim.extractedData.claimType] || 0) + 1;
-        return acc;
-      }, {}),
-      successfullyProcessed: claims.filter(c => c.status === 'completed').length
-    };
-  }
-}
-
-const mockSystem = new MockClaimsSystem();
-
-const ClaimsProcessingDemo = () => {
+const EnhancedClaimsProcessingDemo = () => {
   const [activeTab, setActiveTab] = useState('process');
   const [documentText, setDocumentText] = useState('');
   const [processing, setProcessing] = useState(false);
@@ -145,7 +39,123 @@ const ClaimsProcessingDemo = () => {
   const [selectedClaim, setSelectedClaim] = useState(null);
   const [analytics, setAnalytics] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [dragActive, setDragActive] = useState(false);
+  const [apiKeyStatus, setApiKeyStatus] = useState('checking');
 
+  // Check API key status
+  useEffect(() => {
+    const checkApiKey = () => {
+      const hasApiKey = !!OPENAI_CONFIG.apiKey;
+      setApiKeyStatus(hasApiKey ? 'configured' : 'missing');
+    };
+    
+    checkApiKey();
+  }, []);
+
+  // File upload handlers
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleFileInput = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      handleFiles(e.target.files);
+    }
+  };
+
+  const handleFiles = async (files) => {
+    const fileArray = Array.from(files);
+    const validFiles = fileArray.filter(file => {
+      const extension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+      return enhancedSystem.supportedFileTypes.includes(extension);
+    });
+
+    if (validFiles.length !== fileArray.length) {
+      alert(`Some files were skipped. Supported formats: ${enhancedSystem.supportedFileTypes.join(', ')}`);
+    }
+
+    setUploadedFiles(prev => [...prev, ...validFiles]);
+
+    // Process files automatically
+    for (const file of validFiles) {
+      try {
+        const extractedText = await enhancedSystem.extractTextFromFile(file);
+        const existingText = documentText;
+        const separator = existingText ? '\n\n--- FILE SEPARATOR ---\n\n' : '';
+        setDocumentText(prev => prev + separator + `FILE: ${file.name}\n\n${extractedText}`);
+      } catch (error) {
+        alert(`Failed to process ${file.name}: ${error.message}`);
+      }
+    }
+  };
+
+  const removeFile = (indexToRemove) => {
+    setUploadedFiles(prev => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const clearAllFiles = () => {
+    setUploadedFiles([]);
+    setDocumentText('');
+  };
+
+  const processClaim = async () => {
+    if (!documentText.trim()) {
+      alert('Please enter document text or upload files');
+      return;
+    }
+
+    if (apiKeyStatus === 'missing') {
+      alert('OpenAI API key is not configured. Please set REACT_APP_OPENAI_API_KEY in your environment variables.');
+      return;
+    }
+
+    setProcessing(true);
+    setCurrentResult(null);
+
+    try {
+      const result = await enhancedSystem.processClaimComplete(documentText, {
+        generateCustomerResponse: true,
+        customerFriendly: true
+      });
+
+      if (result.success) {
+        setCurrentResult(result.result);
+        refreshData();
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error('Processing failed:', error);
+      alert(`Processing failed: ${error.message}`);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const refreshData = () => {
+    const claims = enhancedSystem.getAllClaims();
+    setAllClaims(claims);
+    setAnalytics(enhancedSystem.generateAnalytics());
+  };
+
+  // Sample documents
   const sampleDocuments = {
     auto: `AUTOMOBILE ACCIDENT CLAIM REPORT
 
@@ -276,37 +286,6 @@ ESTIMATED TOTAL DAMAGE: ₦4,200,000 ($5,250 USD)
 Weather conditions were extreme and unprecedented for the season. Multiple properties in the area experienced similar storm damage.`
   };
 
-  const processClaim = async () => {
-    if (!documentText.trim()) {
-      alert('Please enter document text or use a sample document');
-      return;
-    }
-
-    setProcessing(true);
-    setCurrentResult(null);
-
-    try {
-      const result = await mockSystem.processClaimComplete(documentText, {
-        generateCustomerResponse: true,
-        customerFriendly: true
-      });
-
-      setCurrentResult(result.result);
-      refreshData();
-    } catch (error) {
-      console.error('Processing failed:', error);
-      alert('Processing failed: ' + error.message);
-    } finally {
-      setProcessing(false);
-    }
-  };
-
-  const refreshData = () => {
-    const claims = mockSystem.getAllClaims();
-    setAllClaims(claims);
-    setAnalytics(mockSystem.generateAnalytics());
-  };
-
   const loadSampleDocument = (type) => {
     setDocumentText(sampleDocuments[type]);
   };
@@ -345,8 +324,103 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
   const renderProcessingTab = () => (
     <div className="space-y-8">
-      {/* Processing Section */}
-      <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-8 transform transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]">
+      {/* API Status Warning */}
+      {apiKeyStatus === 'missing' && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-red-500" />
+            <h3 className="font-semibold text-red-700">OpenAI API Key Required</h3>
+          </div>
+          <p className="text-red-600 mt-2">
+            To use AI-powered processing, please set your OpenAI API key in the environment variable: 
+            <code className="bg-red-100 px-2 py-1 rounded ml-1">REACT_APP_OPENAI_API_KEY</code>
+          </p>
+        </div>
+      )}
+
+      {/* File Upload Section */}
+      <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl">
+            <Upload className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+            Document Upload & Processing
+          </h2>
+        </div>
+
+        {/* Drag and Drop Area */}
+        <div
+          className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+            dragActive 
+              ? 'border-blue-500 bg-blue-50/50' 
+              : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50/30'
+          }`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
+          <input
+            type="file"
+            multiple
+            accept={enhancedSystem.supportedFileTypes.join(',')}
+            onChange={handleFileInput}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
+          
+          <div className="flex flex-col items-center gap-4">
+            <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full">
+              <Paperclip className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-gray-700 mb-2">
+                Drop files here or click to browse
+              </p>
+              <p className="text-sm text-gray-500">
+                Supported formats: PDF, Word, Text, Images ({enhancedSystem.supportedFileTypes.join(', ')})
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Uploaded Files Display */}
+        {uploadedFiles.length > 0 && (
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold text-gray-700">Uploaded Files ({uploadedFiles.length})</h3>
+              <button
+                onClick={clearAllFiles}
+                className="text-red-600 hover:text-red-800 text-sm font-medium"
+              >
+                Clear All
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {uploadedFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border">
+                  <div className="flex items-center gap-3">
+                    <File className="w-5 h-5 text-blue-500" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700 truncate max-w-32">{file.name}</p>
+                      <p className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Text Processing Section */}
+      <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-8">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
             <Brain className="w-6 h-6 text-white" />
@@ -354,6 +428,12 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
           <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
             AI Document Processing
           </h2>
+          {apiKeyStatus === 'configured' && (
+            <div className="ml-auto flex items-center gap-2 text-green-600">
+              <CheckCircle className="w-4 h-4" />
+              <span className="text-sm font-medium">AI Ready</span>
+            </div>
+          )}
         </div>
         
         <div className="space-y-6">
@@ -365,7 +445,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               value={documentText}
               onChange={(e) => setDocumentText(e.target.value)}
               className="w-full h-64 p-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 resize-none backdrop-blur-sm bg-white/50"
-              placeholder="Paste your claim document text here or load a sample document..."
+              placeholder="Paste your claim document text here, upload files above, or load a sample document..."
             />
           </div>
 
@@ -388,7 +468,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
           <button
             onClick={processClaim}
-            disabled={processing || !documentText.trim()}
+            disabled={processing || !documentText.trim() || apiKeyStatus === 'missing'}
             className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-semibold text-lg shadow-xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group"
           >
             {processing ? (
@@ -402,7 +482,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
             ) : (
               <>
                 <Upload className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                Process Claim with NeuroClaim
+                Process Claim with NeuroClaim AI
               </>
             )}
           </button>
@@ -430,10 +510,10 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  { label: 'Claim Number', value: currentResult.extractedData.claimNumber },
-                  { label: 'Claimant', value: currentResult.extractedData.claimantName },
-                  { label: 'Type', value: currentResult.extractedData.claimType },
-                  { label: 'Amount', value: formatCurrency(currentResult.extractedData.estimatedAmount) }
+                  { label: 'Claim Number', value: currentResult.extractedData.claimNumber || 'Not found' },
+                  { label: 'Claimant', value: currentResult.extractedData.claimantName || 'Not found' },
+                  { label: 'Type', value: currentResult.extractedData.claimType || 'Unknown' },
+                  { label: 'Amount', value: currentResult.extractedData.estimatedAmount ? formatCurrency(currentResult.extractedData.estimatedAmount) : 'Not specified' }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
                     <span className="font-medium text-blue-700">{label}:</span>
@@ -445,9 +525,11 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                     currentResult.extractedData.confidence === 'high' 
                       ? 'bg-green-200 text-green-800' 
-                      : 'bg-yellow-200 text-yellow-800'
+                      : currentResult.extractedData.confidence === 'medium'
+                      ? 'bg-yellow-200 text-yellow-800'
+                      : 'bg-red-200 text-red-800'
                   }`}>
-                    {currentResult.extractedData.confidence}
+                    {currentResult.extractedData.confidence || 'unknown'}
                   </span>
                 </div>
               </div>
@@ -470,7 +552,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                     ) 
                   },
                   { label: 'Risk Score', value: `${currentResult.fraudAssessment.riskScore}/100` },
-                  { label: 'Indicators', value: `${currentResult.fraudAssessment.fraudIndicators.length} found` },
+                  { label: 'Indicators', value: `${currentResult.fraudAssessment.fraudIndicators?.length || 0} found` },
                   { label: 'Confidence', value: currentResult.fraudAssessment.confidence }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
@@ -489,17 +571,17 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  { label: 'Department', value: currentResult.categorization.routing.department },
+                  { label: 'Department', value: currentResult.categorization.routing?.department || 'General' },
                   { 
                     label: 'Priority', 
                     value: (
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(currentResult.categorization.priority.level)}`}>
-                        {currentResult.categorization.priority.level}
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(currentResult.categorization.priority?.level)}`}>
+                        {currentResult.categorization.priority?.level || 'normal'}
                       </span>
                     ) 
                   },
-                  { label: 'Assignment', value: currentResult.categorization.routing.assignmentType },
-                  { label: 'Timeline', value: currentResult.categorization.routing.estimatedHandlingTime }
+                  { label: 'Assignment', value: currentResult.categorization.routing?.assignmentType || 'Standard' },
+                  { label: 'Timeline', value: currentResult.categorization.routing?.estimatedHandlingTime || 'Standard' }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
                     <span className="font-medium text-purple-700">{label}:</span>
@@ -516,7 +598,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                 Executive Summary
               </h3>
               <p className="text-sm text-green-800 leading-relaxed">
-                {currentResult.summary.executiveSummary}
+                {currentResult.summary?.executiveSummary || 'Summary not available'}
               </p>
             </div>
           </div>
@@ -528,14 +610,15 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               Recommended Actions
             </h3>
             <div className="space-y-3">
-              {currentResult.recommendedActions.map((action, index) => (
+              {(currentResult.recommendedActions || []).map((action, index) => (
                 <div key={index} className={`p-4 rounded-xl border-l-4 ${
                   action.priority === 'critical' ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100' :
+                  action.priority === 'urgent' ? 'border-red-500 bg-gradient-to-r from-red-50 to-red-100' :
                   action.priority === 'high' ? 'border-orange-500 bg-gradient-to-r from-orange-50 to-orange-100' :
                   'border-blue-500 bg-gradient-to-r from-blue-50 to-blue-100'
                 } transform transition-all duration-200 hover:scale-[1.02] hover:shadow-lg`}>
                   <p className="font-semibold text-gray-900">{action.action}</p>
-                  <p className="text-sm text-gray-600 mt-1">{action.details.join(', ')}</p>
+                  <p className="text-sm text-gray-600 mt-1">{Array.isArray(action.details) ? action.details.join(', ') : action.details}</p>
                 </div>
               ))}
             </div>
@@ -584,21 +667,23 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                     <td className="p-4 font-mono text-xs bg-gray-50 rounded-lg mx-2 my-1">
                       {claim.processingId.slice(-8)}
                     </td>
-                    <td className="p-4 font-medium">{claim.extractedData.claimantName}</td>
+                    <td className="p-4 font-medium">{claim.extractedData?.claimantName || 'Unknown'}</td>
                     <td className="p-4">
                       <span className="capitalize px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                        {claim.extractedData.claimType}
+                        {claim.extractedData?.claimType || 'Unknown'}
                       </span>
                     </td>
-                    <td className="p-4 font-semibold">{formatCurrency(claim.extractedData.estimatedAmount)}</td>
+                    <td className="p-4 font-semibold">
+                      {claim.extractedData?.estimatedAmount ? formatCurrency(claim.extractedData.estimatedAmount) : 'N/A'}
+                    </td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(claim.fraudAssessment.riskLevel)}`}>
-                        {claim.fraudAssessment.riskLevel}
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(claim.fraudAssessment?.riskLevel || 'unknown')}`}>
+                        {claim.fraudAssessment?.riskLevel || 'unknown'}
                       </span>
                     </td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(claim.categorization.priority.level)}`}>
-                        {claim.categorization.priority.level}
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(claim.categorization?.priority?.level || 'normal')}`}>
+                        {claim.categorization?.priority?.level || 'normal'}
                       </span>
                     </td>
                     <td className="p-4">
@@ -782,18 +867,18 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
             </div>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                NeuroClaim
+                NeuroClaim AI Enhanced
               </h1>
               <p className="text-gray-600 text-lg">
-                AI-powered intelligent claims processing with advanced fraud detection
+                AI-powered document processing with OpenAI integration and real-time analysis
               </p>
             </div>
           </div>
           
-          <div className="flex items-center gap-6 text-sm text-gray-600">
+          <div className="flex items-center gap-6 text-sm text-gray-600 flex-wrap">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-yellow-500" />
-              <span>Lightning Fast Processing</span>
+              <span>OpenAI Integration</span>
             </div>
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-green-500" />
@@ -801,8 +886,23 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
             </div>
             <div className="flex items-center gap-2">
               <Brain className="w-4 h-4 text-purple-500" />
-              <span>Neural Network Analysis</span>
+              <span>Real AI Analysis</span>
             </div>
+            <div className="flex items-center gap-2">
+              <Upload className="w-4 h-4 text-blue-500" />
+              <span>Multi-format Support</span>
+            </div>
+            {apiKeyStatus === 'configured' ? (
+              <div className="flex items-center gap-2 text-green-600">
+                <CheckCircle className="w-4 h-4" />
+                <span>AI Connected</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-red-600">
+                <AlertCircle className="w-4 h-4" />
+                <span>API Key Required</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -863,9 +963,9 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                       <div className="space-y-3 text-sm">
                         {[
                           { label: 'ID', value: selectedClaim.processingId },
-                          { label: 'Claimant', value: selectedClaim.extractedData.claimantName },
-                          { label: 'Type', value: selectedClaim.extractedData.claimType },
-                          { label: 'Amount', value: formatCurrency(selectedClaim.extractedData.estimatedAmount) },
+                          { label: 'Claimant', value: selectedClaim.extractedData?.claimantName || 'Unknown' },
+                          { label: 'Type', value: selectedClaim.extractedData?.claimType || 'Unknown' },
+                          { label: 'Amount', value: selectedClaim.extractedData?.estimatedAmount ? formatCurrency(selectedClaim.extractedData.estimatedAmount) : 'N/A' },
                           { label: 'Processed', value: new Date(selectedClaim.timestamp).toLocaleString() }
                         ].map(({ label, value }) => (
                           <div key={label} className="flex justify-between items-center">
@@ -881,23 +981,23 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-red-700">Risk Level:</span>
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(selectedClaim.fraudAssessment.riskLevel)}`}>
-                            {selectedClaim.fraudAssessment.riskLevel}
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(selectedClaim.fraudAssessment?.riskLevel || 'unknown')}`}>
+                            {selectedClaim.fraudAssessment?.riskLevel || 'unknown'}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-red-700">Priority:</span>
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(selectedClaim.categorization.priority.level)}`}>
-                            {selectedClaim.categorization.priority.level}
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(selectedClaim.categorization?.priority?.level || 'normal')}`}>
+                            {selectedClaim.categorization?.priority?.level || 'normal'}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-red-700">Department:</span>
-                          <span className="text-red-900 font-semibold">{selectedClaim.categorization.routing.department}</span>
+                          <span className="text-red-900 font-semibold">{selectedClaim.categorization?.routing?.department || 'General'}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="font-medium text-red-700">Assignment:</span>
-                          <span className="text-red-900 font-semibold">{selectedClaim.categorization.routing.assignmentType}</span>
+                          <span className="text-red-900 font-semibold">{selectedClaim.categorization?.routing?.assignmentType || 'Standard'}</span>
                         </div>
                       </div>
                     </div>
@@ -905,8 +1005,31 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
                   <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-xl border border-green-200/50">
                     <h3 className="font-bold text-green-900 mb-4">Summary</h3>
-                    <p className="text-sm text-green-800 leading-relaxed">{selectedClaim.summary.executiveSummary}</p>
+                    <p className="text-sm text-green-800 leading-relaxed">{selectedClaim.summary?.executiveSummary || 'Summary not available'}</p>
                   </div>
+
+                  {selectedClaim.fraudAssessment?.fraudIndicators?.length > 0 && (
+                    <div className="bg-gradient-to-br from-yellow-50 to-orange-100 p-6 rounded-xl border border-yellow-200/50">
+                      <h3 className="font-bold text-yellow-900 mb-4">Risk Indicators</h3>
+                      <div className="space-y-3">
+                        {selectedClaim.fraudAssessment.fraudIndicators.map((indicator, index) => (
+                          <div key={index} className="bg-white/60 p-4 rounded-lg border border-yellow-200">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-semibold text-yellow-900">{indicator.indicator}</h4>
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                indicator.weight === 'high' ? 'bg-red-200 text-red-800' :
+                                indicator.weight === 'medium' ? 'bg-yellow-200 text-yellow-800' :
+                                'bg-green-200 text-green-800'
+                              }`}>
+                                {indicator.weight}
+                              </span>
+                            </div>
+                            <p className="text-sm text-yellow-800">{indicator.explanation}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="bg-gradient-to-br from-gray-50 to-slate-100 p-6 rounded-xl border border-gray-200/50">
                     <h3 className="font-bold text-gray-900 mb-4">Original Document</h3>
@@ -990,4 +1113,4 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
   );
 };
 
-export default ClaimsProcessingDemo;
+export default EnhancedClaimsProcessingDemo;

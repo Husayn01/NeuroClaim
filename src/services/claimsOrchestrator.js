@@ -1,9 +1,10 @@
-import { openAIClient } from './config/openai.js';
-import { DocumentProcessor } from './services/documentProcessor.js';
-import { FraudDetector } from './services/fraudDetector.js';
-import { ClaimCategorizer } from './services/claimCategorizer.js';
-import { ResponseGenerator } from './services/responseGenerator.js';
-import { ClaimsChatInterface } from './services/chatInterface.js';
+// services/claimsOrchestrator.js
+import { openAIClient } from '../utils/apiClient.js';
+import { DocumentProcessor } from './documentProcessor.js';
+import { FraudDetector } from './fraudDetector.js';
+import { ClaimCategorizer } from './claimCategorizer.js';
+import { ResponseGenerator } from './responseGenerator.js';
+import { ClaimsChatInterface } from './chatInterface.js';
 
 export class ClaimsProcessingSystem {
   constructor() {
@@ -14,6 +15,11 @@ export class ClaimsProcessingSystem {
     this.chatInterface = new ClaimsChatInterface(openAIClient);
     
     this.processedClaims = new Map(); // In-memory storage for demo
+    this.supportedFileTypes = [
+      '.txt', '.pdf', '.doc', '.docx', '.rtf', 
+      '.jpg', '.jpeg', '.png', '.gif', '.bmp',
+      '.json', '.xml', '.csv'
+    ];
   }
 
   /**
@@ -146,30 +152,177 @@ export class ClaimsProcessingSystem {
   }
 
   /**
-   * Process individual steps for more granular control
+   * File extraction methods
    */
-  async extractClaimInfo(documentText) {
-    return await this.documentProcessor.extractClaimInformation(documentText);
+  async extractTextFromFile(file) {
+    const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+    
+    try {
+      switch (fileExtension) {
+        case '.txt':
+        case '.rtf':
+        case '.json':
+        case '.xml':
+        case '.csv':
+          return await this.readTextFile(file);
+        
+        case '.pdf':
+          return await this.extractFromPDF(file);
+        
+        case '.doc':
+        case '.docx':
+          return await this.extractFromWord(file);
+        
+        case '.jpg':
+        case '.jpeg':
+        case '.png':
+        case '.gif':
+        case '.bmp':
+          return await this.extractFromImage(file);
+        
+        default:
+          throw new Error(`Unsupported file type: ${fileExtension}`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to extract text from ${file.name}: ${error.message}`);
+    }
   }
 
-  async validateClaim(claimData) {
-    return await this.documentProcessor.validateClaimInformation(claimData);
+  async readTextFile(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(new Error('Failed to read file'));
+      reader.readAsText(file);
+    });
   }
 
-  async assessFraud(claimData, context = '') {
-    return await this.fraudDetector.assessFraudRisk(claimData, context);
+  async extractFromPDF(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target.result;
+          const uint8Array = new Uint8Array(arrayBuffer);
+          
+          const header = String.fromCharCode(...uint8Array.slice(0, 4));
+          if (header !== '%PDF') {
+            reject(new Error('Invalid PDF file'));
+            return;
+          }
+          
+          resolve(`EXTRACTED FROM PDF: ${file.name}
+          
+This is simulated text extraction from a PDF document. In a real implementation, 
+this would use libraries like PDF.js or server-side PDF processing tools to extract 
+actual text content from the PDF file.
+
+File: ${file.name}
+Size: ${file.size} bytes
+Type: ${file.type}
+
+[Simulated claim content would appear here after real PDF processing]`);
+        } catch (error) {
+          reject(new Error('PDF processing failed'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read PDF file'));
+      reader.readAsArrayBuffer(file);
+    });
   }
 
-  async categorizeClaim(claimData, fraudAssessment) {
-    return await this.claimCategorizer.categorizeAndPrioritize(claimData, fraudAssessment);
+  async extractFromWord(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          resolve(`EXTRACTED FROM WORD DOCUMENT: ${file.name}
+          
+This is simulated text extraction from a Word document. In a real implementation,
+this would use libraries like mammoth.js to extract actual text content from 
+.doc and .docx files.
+
+File: ${file.name}
+Size: ${file.size} bytes
+Type: ${file.type}
+
+[Actual document content would be extracted here using mammoth.js or similar library]`);
+        } catch (error) {
+          reject(new Error('Word document processing failed'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read Word document'));
+      reader.readAsArrayBuffer(file);
+    });
   }
 
-  async generateSummary(claimData, fraudAssessment, categorization) {
-    return await this.responseGenerator.generateClaimSummary(claimData, fraudAssessment, categorization);
+  async extractFromImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const img = new Image();
+          img.onload = () => {
+            resolve(`EXTRACTED FROM IMAGE: ${file.name}
+            
+This is simulated OCR text extraction from an image. In a real implementation,
+this would use libraries like Tesseract.js or cloud-based OCR services to extract
+text from images.
+
+Image Details:
+- File: ${file.name}
+- Size: ${file.size} bytes
+- Type: ${file.type}
+- Dimensions: ${img.width}x${img.height}
+
+[OCR extracted text would appear here after real image processing]`);
+          };
+          img.onerror = () => reject(new Error('Invalid image file'));
+          img.src = e.target.result;
+        } catch (error) {
+          reject(new Error('Image processing failed'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read image file'));
+      reader.readAsDataURL(file);
+    });
   }
 
-  async generateCustomerResponse(claimData, decision, friendly = true) {
-    return await this.responseGenerator.generateCustomerResponse(claimData, decision, friendly);
+  /**
+   * Generate action plan based on processing results
+   */
+  generateActionPlan(validation, fraudAssessment, categorization) {
+    const actions = [];
+
+    // Validation-based actions
+    if (validation.validationStatus === 'incomplete') {
+      actions.push({
+        type: 'validation',
+        priority: 'high',
+        action: 'Request additional documentation',
+        details: validation.requiredActions || ['Additional documentation needed']
+      });
+    }
+
+    // Fraud-based actions
+    if (fraudAssessment.riskLevel === 'high' || fraudAssessment.riskLevel === 'critical') {
+      actions.push({
+        type: 'fraud_review',
+        priority: 'urgent',
+        action: 'Conduct fraud investigation',
+        details: fraudAssessment.investigationAreas || ['Requires fraud investigation']
+      });
+    }
+
+    // Routing actions
+    actions.push({
+      type: 'routing',
+      priority: categorization.priority.level,
+      action: `Route to ${categorization.routing.department}`,
+      details: [`Assign to: ${categorization.routing.assignmentType}`]
+    });
+
+    return actions;
   }
 
   /**
@@ -197,78 +350,6 @@ export class ClaimsProcessingSystem {
    */
   getAllClaims() {
     return Array.from(this.processedClaims.values());
-  }
-
-  /**
-   * Search claims by criteria
-   */
-  searchClaims(criteria = {}) {
-    const claims = this.getAllClaims();
-    
-    return claims.filter(claim => {
-      if (criteria.riskLevel && claim.fraudAssessment?.riskLevel !== criteria.riskLevel) {
-        return false;
-      }
-      
-      if (criteria.claimType && claim.extractedData?.claimType !== criteria.claimType) {
-        return false;
-      }
-      
-      if (criteria.priority && claim.categorization?.priority?.level !== criteria.priority) {
-        return false;
-      }
-      
-      if (criteria.status && claim.status !== criteria.status) {
-        return false;
-      }
-      
-      return true;
-    });
-  }
-
-  /**
-   * Generate action plan based on processing results
-   */
-  generateActionPlan(validation, fraudAssessment, categorization) {
-    const actions = [];
-
-    // Validation-based actions
-    if (validation.validationStatus === 'incomplete') {
-      actions.push({
-        type: 'validation',
-        priority: 'high',
-        action: 'Request additional documentation',
-        details: validation.requiredActions
-      });
-    }
-
-    // Fraud-based actions
-    if (fraudAssessment.riskLevel === 'high' || fraudAssessment.riskLevel === 'critical') {
-      actions.push({
-        type: 'fraud_review',
-        priority: 'critical',
-        action: 'Conduct fraud investigation',
-        details: fraudAssessment.investigationAreas
-      });
-    }
-
-    // Routing actions
-    actions.push({
-      type: 'routing',
-      priority: categorization.priority.level,
-      action: `Route to ${categorization.routing.department}`,
-      details: [`Assign to: ${categorization.routing.assignmentType}`]
-    });
-
-    // Processing timeline
-    actions.push({
-      type: 'timeline',
-      priority: 'info',
-      action: 'Set processing timeline',
-      details: [`Expected handling time: ${categorization.routing.estimatedHandlingTime}`]
-    });
-
-    return actions;
   }
 
   /**

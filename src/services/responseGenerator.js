@@ -1,3 +1,4 @@
+// services/responseGenerator.js
 export class ResponseGenerator {
   constructor(openAIClient) {
     this.client = openAIClient;
@@ -27,6 +28,8 @@ Generate a summary in this format:
   "timeline": "expected processing timeline",
   "specialNotes": "any special considerations"
 }
+
+Return only valid JSON without any additional text or formatting.
 `;
 
     try {

@@ -1,3 +1,4 @@
+// services/documentProcessor.js
 export class DocumentProcessor {
   constructor(openAIClient) {
     this.client = openAIClient;
@@ -38,6 +39,8 @@ Only include fields that are clearly present in the document. Mark confidence as
 - high: Most key information is present and clear
 - medium: Some key information is present but unclear or incomplete
 - low: Very little information is extractable
+
+Return only valid JSON without any additional text or formatting.
 `;
 
     try {
@@ -85,6 +88,8 @@ Provide validation results in the following JSON format:
   "requiredActions": ["array of actions needed before processing"],
   "estimatedProcessingTime": "immediate|1-3 days|3-7 days|investigation required"
 }
+
+Return only valid JSON without any additional text or formatting.
 `;
 
     try {

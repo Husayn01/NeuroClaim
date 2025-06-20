@@ -1,3 +1,4 @@
+// services/chatInterface.js
 export class ClaimsChatInterface {
   constructor(openAIClient) {
     this.client = openAIClient;
@@ -57,5 +58,3 @@ Guidelines:
     this.conversationHistory = [];
   }
 }
-
-export { OPENAI_CONFIG, openAIClient };

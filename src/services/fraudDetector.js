@@ -1,3 +1,4 @@
+// services/fraudDetector.js
 export class FraudDetector {
   constructor(openAIClient) {
     this.client = openAIClient;
@@ -45,6 +46,8 @@ Consider factors like:
 - Incident circumstances
 - Claimant history indicators
 - Geographic factors
+
+Return only valid JSON without any additional text or formatting.
 `;
 
     try {

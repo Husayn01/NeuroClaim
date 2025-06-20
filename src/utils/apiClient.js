@@ -1,10 +1,16 @@
 // utils/apiClient.js
+import { OPENAI_CONFIG } from '../config/openai.js';
+
 class OpenAIClient {
   constructor(config = OPENAI_CONFIG) {
     this.config = config;
   }
 
   async makeRequest(endpoint, payload) {
+    if (!this.config.apiKey) {
+      throw new Error('OpenAI API key is not configured. Please set REACT_APP_OPENAI_API_KEY in your environment variables.');
+    }
+
     try {
       const response = await fetch(`${this.config.baseURL}${endpoint}`, {
         method: 'POST',
@@ -16,7 +22,8 @@ class OpenAIClient {
       });
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}. ${errorData.error?.message || ''}`);
       }
 
       return await response.json();
@@ -40,3 +47,4 @@ class OpenAIClient {
 }
 
 export const openAIClient = new OpenAIClient();
+export { OpenAIClient };
