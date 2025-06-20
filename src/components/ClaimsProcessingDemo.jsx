@@ -960,7 +960,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
             </div>
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-                NeuroClaim AI Enhanced
+                NeuroClaim
               </h1>
               <p className="text-gray-600 text-lg">
                 AI-powered document processing with OpenAI integration and real-time analysis
