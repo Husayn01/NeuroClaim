@@ -1,4 +1,3 @@
-// services/claimCategorizer.js
 export class ClaimCategorizer {
   constructor(openAIClient) {
     this.client = openAIClient;

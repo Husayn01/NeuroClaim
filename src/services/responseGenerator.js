@@ -1,4 +1,3 @@
-// services/responseGenerator.js
 export class ResponseGenerator {
   constructor(openAIClient) {
     this.client = openAIClient;

@@ -1,4 +1,3 @@
-// services/chatInterface.js
 export class ClaimsChatInterface {
   constructor(openAIClient) {
     this.client = openAIClient;

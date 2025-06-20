@@ -1,4 +1,3 @@
-// services/documentProcessor.js
 export class DocumentProcessor {
   constructor(openAIClient) {
     this.client = openAIClient;

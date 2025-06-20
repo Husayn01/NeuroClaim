@@ -1,4 +1,3 @@
-// services/fraudDetector.js
 export class FraudDetector {
   constructor(openAIClient) {
     this.client = openAIClient;
