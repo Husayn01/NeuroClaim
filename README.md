@@ -1,6 +1,5 @@
 # 🧠 Neuroclaim - AI-Powered Claims Processing System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.0+-blue.svg)](https://reactjs.org/)
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-green.svg)](https://openai.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC.svg)](https://tailwindcss.com/)
@@ -187,31 +186,6 @@ Try Neuroclaim with these sample claim types:
 
 ---
 
-## 🔧 **API Integration**
-
-### OpenAI Integration
-```javascript
-// Example: Process claim document
-const result = await claimsSystem.processClaimComplete(documentText, {
-  generateCustomerResponse: true,
-  customerFriendly: true
-});
-
-if (result.success) {
-  console.log('Extracted Data:', result.result.extractedData);
-  console.log('Fraud Assessment:', result.result.fraudAssessment);
-  console.log('Routing Decision:', result.result.categorization);
-}
-```
-
-### Key Services
-- **DocumentProcessor**: Extract structured information
-- **FraudDetector**: Assess risk and detect anomalies
-- **ClaimCategorizer**: Route and prioritize claims
-- **ResponseGenerator**: Create summaries and communications
-
----
-
 ## 🏆 **Business Impact**
 
 ### **Cost Reduction**
@@ -244,9 +218,9 @@ if (result.success) {
 
 ## 📞 **Contact**
 
-**Project Link**: [https://github.com/[your-username]/neuroclaim](https://github.com/[your-username]/neuroclaim)
+**Project Link**: [https://github.com/Husayn01/NeuroClaim](https://github.com/Husayn01/NeuroClaim)
 
-**Live Demo**: [https://neuroclaim-demo.vercel.app](https://neuroclaim-demo.vercel.app)
+**Live Demo**: [https://husayn01.github.io/NeuroClaim/](https://husayn01.github.io/NeuroClaim/)
 
 **Email**: [your-email@example.com](mailto:your-email@example.com)
 
@@ -254,10 +228,8 @@ if (result.success) {
 
 ## 🙏 **Acknowledgments**
 
-- [Curacel](https://curacel.co) for organizing the hackathon
-- [OpenAI](https://openai.com) for providing the GPT-4 API
+- [Curacel](https://curacel.co) for organizing the hackathon and providing the API
 - [React](https://reactjs.org) and [Tailwind CSS](https://tailwindcss.com) communities
-- Insurance industry experts for domain insights
 
 ---
 
@@ -265,6 +237,6 @@ if (result.success) {
 
 **Built with ❤️ for the Curacel Hackathon 2025**
 
-[⭐ Star this repo](https://github.com/[your-username]/neuroclaim) if you found it helpful!
+[⭐ Star this repo](https://github.com/Husayn01/NeuroClaim) if you found it helpful!
 
 </div>
