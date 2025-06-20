@@ -5,18 +5,13 @@ import {
   AlertCircle, 
   CheckCircle, 
   Clock, 
-  MessageSquare, 
   Upload,
   BarChart3,
-  Search,
   RefreshCw,
   Eye,
-  Download,
   Brain,
   Zap,
   TrendingUp,
-  Users,
-  DollarSign,
   Activity,
   File,
   X,
@@ -55,11 +50,11 @@ const EnhancedClaimsProcessingDemo = () => {
         
         if (!hasApiKey) {
           setApiKeyStatus('missing');
-          setErrorMessage('OpenAI API key not found or invalid format. Please check your .env file.');
+          setErrorMessage('OpenAI API key not found. For demo purposes, you can view the interface without AI processing.');
           return;
         }
 
-        // Test the connection
+        // Test the connection only if API key is available
         setIsTestingConnection(true);
         const testResult = await openAIClient.testConnection();
         
@@ -153,7 +148,7 @@ const EnhancedClaimsProcessingDemo = () => {
     }
 
     if (apiKeyStatus !== 'configured') {
-      setErrorMessage('OpenAI API is not properly configured. Please check your API key and connection.');
+      setErrorMessage('This is a demo version. To use AI processing, please run locally with your OpenAI API key.');
       setTimeout(() => setErrorMessage(''), 5000);
       return;
     }
@@ -369,48 +364,64 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
     <div className="space-y-8">
       {/* Error Message Display */}
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className={`border rounded-lg p-4 ${
+          apiKeyStatus === 'missing' ? 'bg-blue-50 border-blue-200' : 'bg-red-50 border-red-200'
+        }`}>
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-red-500" />
-            <h3 className="font-semibold text-red-700">Error</h3>
+            <AlertCircle className={`w-5 h-5 ${
+              apiKeyStatus === 'missing' ? 'text-blue-500' : 'text-red-500'
+            }`} />
+            <h3 className={`font-semibold ${
+              apiKeyStatus === 'missing' ? 'text-blue-700' : 'text-red-700'
+            }`}>
+              {apiKeyStatus === 'missing' ? 'Demo Mode' : 'Error'}
+            </h3>
           </div>
-          <p className="text-red-600 mt-2">{errorMessage}</p>
+          <p className={`mt-2 ${
+            apiKeyStatus === 'missing' ? 'text-blue-600' : 'text-red-600'
+          }`}>
+            {errorMessage}
+          </p>
         </div>
       )}
 
       {/* API Status Section */}
       <div className={`border rounded-lg p-4 ${
         apiKeyStatus === 'configured' ? 'bg-green-50 border-green-200' :
-        apiKeyStatus === 'missing' ? 'bg-red-50 border-red-200' :
+        apiKeyStatus === 'missing' ? 'bg-blue-50 border-blue-200' :
         apiKeyStatus === 'error' ? 'bg-red-50 border-red-200' :
         'bg-yellow-50 border-yellow-200'
       }`}>
         <div className="flex items-center gap-2">
           {apiKeyStatus === 'configured' && <CheckCircle className="w-5 h-5 text-green-500" />}
-          {apiKeyStatus === 'missing' && <AlertCircle className="w-5 h-5 text-red-500" />}
+          {apiKeyStatus === 'missing' && <AlertCircle className="w-5 h-5 text-blue-500" />}
           {apiKeyStatus === 'error' && <AlertCircle className="w-5 h-5 text-red-500" />}
           {apiKeyStatus === 'checking' && <Clock className="w-5 h-5 text-yellow-500 animate-spin" />}
           
           <h3 className={`font-semibold ${
             apiKeyStatus === 'configured' ? 'text-green-700' :
-            apiKeyStatus === 'missing' || apiKeyStatus === 'error' ? 'text-red-700' :
+            apiKeyStatus === 'missing' ? 'text-blue-700' :
+            apiKeyStatus === 'error' ? 'text-red-700' :
             'text-yellow-700'
           }`}>
-            OpenAI Connection Status: {apiKeyStatus === 'checking' ? 'Checking...' : 
-                                     apiKeyStatus === 'configured' ? 'Connected' :
-                                     apiKeyStatus === 'missing' ? 'API Key Missing' :
-                                     'Connection Error'}
+            Connection Status: {apiKeyStatus === 'checking' ? 'Checking...' : 
+                               apiKeyStatus === 'configured' ? 'Connected' :
+                               apiKeyStatus === 'missing' ? 'Demo Mode' :
+                               'Connection Error'}
           </h3>
           
           {isTestingConnection && <div className="ml-2 w-4 h-4 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>}
         </div>
         
         {apiKeyStatus === 'missing' && (
-          <p className="text-red-600 mt-2">
-            To use AI-powered processing, please set your OpenAI API key in: 
-            <code className="bg-red-100 px-2 py-1 rounded ml-1">.env</code> file as 
-            <code className="bg-red-100 px-2 py-1 rounded ml-1">REACT_APP_OPENAI_API_KEY</code>
-          </p>
+          <div className="mt-2">
+            <p className="text-blue-600 mb-2">
+              🚀 <strong>Live Demo Mode:</strong> You can explore the interface and see how it works.
+            </p>
+            <p className="text-blue-600 text-sm">
+              💡 <strong>For Full AI Processing:</strong> Clone the repo and add your OpenAI API key locally.
+            </p>
+          </div>
         )}
         
         {apiKeyStatus === 'configured' && (
@@ -550,7 +561,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
           <button
             onClick={processClaim}
-            disabled={processing || !documentText.trim() || apiKeyStatus !== 'configured'}
+            disabled={processing || !documentText.trim()}
             className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-semibold text-lg shadow-xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group"
           >
             {processing ? (
@@ -564,7 +575,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
             ) : (
               <>
                 <Upload className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                Process Claim with NeuroClaim AI
+                {apiKeyStatus === 'configured' ? 'Process Claim with NeuroClaim AI' : 'Try Demo Interface (AI Processing Requires API Key)'}
               </>
             )}
           </button>
@@ -592,10 +603,10 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  { label: 'Claim Number', value: currentResult.extractedData.claimNumber || 'Not found' },
-                  { label: 'Claimant', value: currentResult.extractedData.claimantName || 'Not found' },
-                  { label: 'Type', value: currentResult.extractedData.claimType || 'Unknown' },
-                  { label: 'Amount', value: currentResult.extractedData.estimatedAmount ? formatCurrency(currentResult.extractedData.estimatedAmount) : 'Not specified' }
+                  { label: 'Claim Number', value: currentResult.extractedData?.claimNumber || 'Not found' },
+                  { label: 'Claimant', value: currentResult.extractedData?.claimantName || 'Not found' },
+                  { label: 'Type', value: currentResult.extractedData?.claimType || 'Unknown' },
+                  { label: 'Amount', value: currentResult.extractedData?.estimatedAmount ? formatCurrency(currentResult.extractedData.estimatedAmount) : 'Not specified' }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
                     <span className="font-medium text-blue-700">{label}:</span>
@@ -605,13 +616,13 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                 <div className="flex justify-between items-center">
                   <span className="font-medium text-blue-700">Confidence:</span>
                   <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    currentResult.extractedData.confidence === 'high' 
+                    currentResult.extractedData?.confidence === 'high' 
                       ? 'bg-green-200 text-green-800' 
-                      : currentResult.extractedData.confidence === 'medium'
+                      : currentResult.extractedData?.confidence === 'medium'
                       ? 'bg-yellow-200 text-yellow-800'
                       : 'bg-red-200 text-red-800'
                   }`}>
-                    {currentResult.extractedData.confidence || 'unknown'}
+                    {currentResult.extractedData?.confidence || 'unknown'}
                   </span>
                 </div>
               </div>
@@ -628,14 +639,14 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                   { 
                     label: 'Risk Level', 
                     value: (
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(currentResult.fraudAssessment.riskLevel)}`}>
-                        {currentResult.fraudAssessment.riskLevel}
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getRiskBadgeColor(currentResult.fraudAssessment?.riskLevel)}`}>
+                        {currentResult.fraudAssessment?.riskLevel}
                       </span>
                     ) 
                   },
-                  { label: 'Risk Score', value: `${currentResult.fraudAssessment.riskScore}/100` },
-                  { label: 'Indicators', value: `${currentResult.fraudAssessment.fraudIndicators?.length || 0} found` },
-                  { label: 'Confidence', value: currentResult.fraudAssessment.confidence }
+                  { label: 'Risk Score', value: `${currentResult.fraudAssessment?.riskScore}/100` },
+                  { label: 'Indicators', value: `${currentResult.fraudAssessment?.fraudIndicators?.length || 0} found` },
+                  { label: 'Confidence', value: currentResult.fraudAssessment?.confidence }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
                     <span className="font-medium text-red-700">{label}:</span>
@@ -653,17 +664,17 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
               </h3>
               <div className="space-y-3 text-sm">
                 {[
-                  { label: 'Department', value: currentResult.categorization.routing?.department || 'General' },
+                  { label: 'Department', value: currentResult.categorization?.routing?.department || 'General' },
                   { 
                     label: 'Priority', 
                     value: (
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(currentResult.categorization.priority?.level)}`}>
-                        {currentResult.categorization.priority?.level || 'normal'}
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPriorityBadgeColor(currentResult.categorization?.priority?.level)}`}>
+                        {currentResult.categorization?.priority?.level || 'normal'}
                       </span>
                     ) 
                   },
-                  { label: 'Assignment', value: currentResult.categorization.routing?.assignmentType || 'Standard' },
-                  { label: 'Timeline', value: currentResult.categorization.routing?.estimatedHandlingTime || 'Standard' }
+                  { label: 'Assignment', value: currentResult.categorization?.routing?.assignmentType || 'Standard' },
+                  { label: 'Timeline', value: currentResult.categorization?.routing?.estimatedHandlingTime || 'Standard' }
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center">
                     <span className="font-medium text-purple-700">{label}:</span>
@@ -744,7 +755,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                 </tr>
               </thead>
               <tbody>
-                {allClaims.map((claim, index) => (
+                {allClaims.map((claim) => (
                   <tr key={claim.processingId} className="border-b border-gray-100 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
                     <td className="p-4 font-mono text-xs bg-gray-50 rounded-lg mx-2 my-1">
                       {claim.processingId.slice(-8)}
@@ -980,9 +991,9 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
                 <span>AI Connected</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-red-600">
+              <div className="flex items-center gap-2 text-blue-600">
                 <AlertCircle className="w-4 h-4" />
-                <span>API Key Required</span>
+                <span>Demo Mode</span>
               </div>
             )}
           </div>

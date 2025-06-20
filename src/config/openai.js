@@ -1,12 +1,14 @@
-// config/openai.js
+// config/openai.js - Updated for production deployment
 const getOpenAIConfig = () => {
-  // Access environment variables safely in React
-  const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
+  // Only use API key in development or when explicitly provided
+  const apiKey = process.env.NODE_ENV === 'development' 
+    ? process.env.REACT_APP_OPENAI_API_KEY || ''
+    : ''; // Empty for production builds
   
   return {
     apiKey,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4o-mini', // Changed to more accessible model
+    model: 'gpt-4o-mini',
     temperature: 0.3,
     maxTokens: 2000
   };
