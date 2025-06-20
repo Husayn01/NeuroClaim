@@ -199,27 +199,6 @@ sequenceDiagram
 
 ---
 
-## 📊 **Live Demo & Screenshots**
-
-### 🎮 **Interactive Demo**
-**[Try NeuroClaim Live →](https://husayn01.github.io/NeuroClaim/)**
-
-### 📸 **Application Screenshots**
-
-<div align="center">
-
-| AI Processing Interface | Real-time Analytics |
-|:----------------------:|:------------------:|
-| ![Processing](https://via.placeholder.com/400x250/6366F1/FFFFFF?text=AI+Processing+Interface) | ![Analytics](https://via.placeholder.com/400x250/059669/FFFFFF?text=Analytics+Dashboard) |
-
-| Claims Management Hub | Fraud Detection |
-|:--------------------:|:---------------:|
-| ![Claims](https://via.placeholder.com/400x250/DC2626/FFFFFF?text=Claims+Management) | ![Fraud](https://via.placeholder.com/400x250/F59E0B/FFFFFF?text=Fraud+Detection) |
-
-</div>
-
----
-
 ## 🎯 **Use Cases & Benefits**
 
 ### 🏢 **For Insurance Companies**
@@ -411,29 +390,6 @@ git push origin feature/amazing-feature
 - [OpenAI API Documentation](https://platform.openai.com/docs)
 - [React Documentation](https://react.dev)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-
----
-
-## 📞 **Contact & Support**
-
-<div align="center">
-
-### 🌐 **Project Links**
-**[🚀 Live Demo](https://husayn01.github.io/NeuroClaim/)** | **[💻 GitHub Repository](https://github.com/Husayn01/NeuroClaim)** | **[📧 Contact Team](mailto:contact@neuroclaim.ai)**
-
-### 👥 **Team NeuroX**
-| Role | Contact |
-|------|---------|
-| **Lead Developer** | [@Husayn01](https://github.com/Husayn01) |
-| **AI Specialist** | [ai@neuroclaim.ai](mailto:ai@neuroclaim.ai) |
-| **Product Designer** | [design@neuroclaim.ai](mailto:design@neuroclaim.ai) |
-
-### 💬 **Get in Touch**
-- 📧 **Email**: [hello@neuroclaim.ai](mailto:hello@neuroclaim.ai)
-- 🐦 **Twitter**: [@NeuroClaim](https://twitter.com/neuroclaim)
-- 💼 **LinkedIn**: [NeuroClaim](https://linkedin.com/company/neuroclaim)
-
-</div>
 
 ---
 
