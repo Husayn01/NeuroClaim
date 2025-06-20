@@ -26,6 +26,7 @@ import {
 // Import services
 import { OPENAI_CONFIG } from '../config/openai.js';
 import { ClaimsProcessingSystem } from '../services/claimsOrchestrator.js';
+import { openAIClient } from '../utils/apiClient.js';
 
 // Create system instance
 const enhancedSystem = new ClaimsProcessingSystem();
@@ -42,12 +43,39 @@ const EnhancedClaimsProcessingDemo = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [dragActive, setDragActive] = useState(false);
   const [apiKeyStatus, setApiKeyStatus] = useState('checking');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
 
-  // Check API key status
+  // Check API key status and test connection
   useEffect(() => {
-    const checkApiKey = () => {
-      const hasApiKey = !!OPENAI_CONFIG.apiKey;
-      setApiKeyStatus(hasApiKey ? 'configured' : 'missing');
+    const checkApiKey = async () => {
+      try {
+        setApiKeyStatus('checking');
+        const hasApiKey = !!OPENAI_CONFIG.apiKey && OPENAI_CONFIG.apiKey.startsWith('sk-');
+        
+        if (!hasApiKey) {
+          setApiKeyStatus('missing');
+          setErrorMessage('OpenAI API key not found or invalid format. Please check your .env file.');
+          return;
+        }
+
+        // Test the connection
+        setIsTestingConnection(true);
+        const testResult = await openAIClient.testConnection();
+        
+        if (testResult.success) {
+          setApiKeyStatus('configured');
+          setErrorMessage('');
+        } else {
+          setApiKeyStatus('error');
+          setErrorMessage(`API Connection Failed: ${testResult.error}`);
+        }
+      } catch (error) {
+        setApiKeyStatus('error');
+        setErrorMessage(`Connection test failed: ${error.message}`);
+      } finally {
+        setIsTestingConnection(false);
+      }
     };
     
     checkApiKey();
@@ -88,7 +116,8 @@ const EnhancedClaimsProcessingDemo = () => {
     });
 
     if (validFiles.length !== fileArray.length) {
-      alert(`Some files were skipped. Supported formats: ${enhancedSystem.supportedFileTypes.join(', ')}`);
+      setErrorMessage(`Some files were skipped. Supported formats: ${enhancedSystem.supportedFileTypes.join(', ')}`);
+      setTimeout(() => setErrorMessage(''), 5000);
     }
 
     setUploadedFiles(prev => [...prev, ...validFiles]);
@@ -101,7 +130,8 @@ const EnhancedClaimsProcessingDemo = () => {
         const separator = existingText ? '\n\n--- FILE SEPARATOR ---\n\n' : '';
         setDocumentText(prev => prev + separator + `FILE: ${file.name}\n\n${extractedText}`);
       } catch (error) {
-        alert(`Failed to process ${file.name}: ${error.message}`);
+        setErrorMessage(`Failed to process ${file.name}: ${error.message}`);
+        setTimeout(() => setErrorMessage(''), 5000);
       }
     }
   };
@@ -117,19 +147,23 @@ const EnhancedClaimsProcessingDemo = () => {
 
   const processClaim = async () => {
     if (!documentText.trim()) {
-      alert('Please enter document text or upload files');
+      setErrorMessage('Please enter document text or upload files');
+      setTimeout(() => setErrorMessage(''), 3000);
       return;
     }
 
-    if (apiKeyStatus === 'missing') {
-      alert('OpenAI API key is not configured. Please set REACT_APP_OPENAI_API_KEY in your environment variables.');
+    if (apiKeyStatus !== 'configured') {
+      setErrorMessage('OpenAI API is not properly configured. Please check your API key and connection.');
+      setTimeout(() => setErrorMessage(''), 5000);
       return;
     }
 
     setProcessing(true);
     setCurrentResult(null);
+    setErrorMessage('');
 
     try {
+      console.log('Starting claim processing...');
       const result = await enhancedSystem.processClaimComplete(documentText, {
         generateCustomerResponse: true,
         customerFriendly: true
@@ -138,21 +172,28 @@ const EnhancedClaimsProcessingDemo = () => {
       if (result.success) {
         setCurrentResult(result.result);
         refreshData();
+        setErrorMessage('');
       } else {
-        throw new Error(result.error);
+        throw new Error(result.error || 'Processing failed with unknown error');
       }
     } catch (error) {
       console.error('Processing failed:', error);
-      alert(`Processing failed: ${error.message}`);
+      setErrorMessage(`Processing failed: ${error.message}`);
+      setCurrentResult(null);
     } finally {
       setProcessing(false);
     }
   };
 
   const refreshData = () => {
-    const claims = enhancedSystem.getAllClaims();
-    setAllClaims(claims);
-    setAnalytics(enhancedSystem.generateAnalytics());
+    try {
+      const claims = enhancedSystem.getAllClaims();
+      setAllClaims(claims);
+      setAnalytics(enhancedSystem.generateAnalytics());
+    } catch (error) {
+      console.error('Failed to refresh data:', error);
+      setErrorMessage(`Failed to refresh data: ${error.message}`);
+    }
   };
 
   // Sample documents
@@ -288,9 +329,11 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
   const loadSampleDocument = (type) => {
     setDocumentText(sampleDocuments[type]);
+    setErrorMessage('');
   };
 
   const formatCurrency = (amount) => {
+    if (typeof amount !== 'number') return 'N/A';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD'
@@ -324,19 +367,58 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
   const renderProcessingTab = () => (
     <div className="space-y-8">
-      {/* API Status Warning */}
-      {apiKeyStatus === 'missing' && (
+      {/* Error Message Display */}
+      {errorMessage && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-5 h-5 text-red-500" />
-            <h3 className="font-semibold text-red-700">OpenAI API Key Required</h3>
+            <h3 className="font-semibold text-red-700">Error</h3>
           </div>
-          <p className="text-red-600 mt-2">
-            To use AI-powered processing, please set your OpenAI API key in the environment variable: 
-            <code className="bg-red-100 px-2 py-1 rounded ml-1">REACT_APP_OPENAI_API_KEY</code>
-          </p>
+          <p className="text-red-600 mt-2">{errorMessage}</p>
         </div>
       )}
+
+      {/* API Status Section */}
+      <div className={`border rounded-lg p-4 ${
+        apiKeyStatus === 'configured' ? 'bg-green-50 border-green-200' :
+        apiKeyStatus === 'missing' ? 'bg-red-50 border-red-200' :
+        apiKeyStatus === 'error' ? 'bg-red-50 border-red-200' :
+        'bg-yellow-50 border-yellow-200'
+      }`}>
+        <div className="flex items-center gap-2">
+          {apiKeyStatus === 'configured' && <CheckCircle className="w-5 h-5 text-green-500" />}
+          {apiKeyStatus === 'missing' && <AlertCircle className="w-5 h-5 text-red-500" />}
+          {apiKeyStatus === 'error' && <AlertCircle className="w-5 h-5 text-red-500" />}
+          {apiKeyStatus === 'checking' && <Clock className="w-5 h-5 text-yellow-500 animate-spin" />}
+          
+          <h3 className={`font-semibold ${
+            apiKeyStatus === 'configured' ? 'text-green-700' :
+            apiKeyStatus === 'missing' || apiKeyStatus === 'error' ? 'text-red-700' :
+            'text-yellow-700'
+          }`}>
+            OpenAI Connection Status: {apiKeyStatus === 'checking' ? 'Checking...' : 
+                                     apiKeyStatus === 'configured' ? 'Connected' :
+                                     apiKeyStatus === 'missing' ? 'API Key Missing' :
+                                     'Connection Error'}
+          </h3>
+          
+          {isTestingConnection && <div className="ml-2 w-4 h-4 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>}
+        </div>
+        
+        {apiKeyStatus === 'missing' && (
+          <p className="text-red-600 mt-2">
+            To use AI-powered processing, please set your OpenAI API key in: 
+            <code className="bg-red-100 px-2 py-1 rounded ml-1">.env</code> file as 
+            <code className="bg-red-100 px-2 py-1 rounded ml-1">REACT_APP_OPENAI_API_KEY</code>
+          </p>
+        )}
+        
+        {apiKeyStatus === 'configured' && (
+          <p className="text-green-600 mt-2">
+            ✅ Successfully connected to OpenAI API. Ready for AI-powered claim processing!
+          </p>
+        )}
+      </div>
 
       {/* File Upload Section */}
       <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-8">
@@ -468,7 +550,7 @@ Weather conditions were extreme and unprecedented for the season. Multiple prope
 
           <button
             onClick={processClaim}
-            disabled={processing || !documentText.trim() || apiKeyStatus === 'missing'}
+            disabled={processing || !documentText.trim() || apiKeyStatus !== 'configured'}
             className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-3 font-semibold text-lg shadow-xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group"
           >
             {processing ? (

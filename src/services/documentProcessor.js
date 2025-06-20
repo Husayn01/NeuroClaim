@@ -4,17 +4,43 @@ export class DocumentProcessor {
     this.client = openAIClient;
   }
 
+  // Helper method to clean and parse JSON from AI responses
+  parseJSONResponse(content) {
+    try {
+      // Remove any markdown formatting
+      let cleanContent = content.trim();
+      if (cleanContent.startsWith('```json')) {
+        cleanContent = cleanContent.replace(/```json\s*/, '').replace(/```\s*$/, '');
+      } else if (cleanContent.startsWith('```')) {
+        cleanContent = cleanContent.replace(/```\s*/, '').replace(/```\s*$/, '');
+      }
+      
+      return JSON.parse(cleanContent);
+    } catch (error) {
+      console.error('JSON parsing failed:', error);
+      console.error('Content was:', content);
+      throw new Error(`Failed to parse AI response as JSON: ${error.message}`);
+    }
+  }
+
   async extractClaimInformation(documentText) {
-    const prompt = `
-You are an expert insurance claims processor. Extract structured information from the following claim document.
+    if (!documentText || documentText.trim().length === 0) {
+      return {
+        success: false,
+        error: 'Document text is empty or invalid',
+        data: null
+      };
+    }
+
+    const prompt = `You are an expert insurance claims processor. Extract structured information from the following claim document.
 
 Document Text:
-${documentText}
+${documentText.substring(0, 8000)} ${documentText.length > 8000 ? '...(truncated)' : ''}
 
 Please extract and return a JSON object with the following structure:
 {
   "claimNumber": "string or null",
-  "policyNumber": "string or null",
+  "policyNumber": "string or null", 
   "claimantName": "string or null",
   "dateOfIncident": "YYYY-MM-DD or null",
   "dateOfClaim": "YYYY-MM-DD or null",
@@ -26,7 +52,7 @@ Please extract and return a JSON object with the following structure:
   "medicalTreatment": "string or null",
   "vehicleInformation": {
     "make": "string or null",
-    "model": "string or null",
+    "model": "string or null", 
     "year": "number or null",
     "licensePlate": "string or null"
   },
@@ -35,22 +61,30 @@ Please extract and return a JSON object with the following structure:
   "confidence": "high|medium|low"
 }
 
-Only include fields that are clearly present in the document. Mark confidence as:
-- high: Most key information is present and clear
-- medium: Some key information is present but unclear or incomplete
-- low: Very little information is extractable
+Rules:
+- Only include fields that are clearly present in the document
+- For amounts, extract only numbers (no currency symbols)
+- Mark confidence as high if most key info is present, medium if some is unclear, low if very little is extractable
+- Return ONLY valid JSON, no other text
 
-Return only valid JSON without any additional text or formatting.
-`;
+JSON:`;
 
     try {
       const response = await this.client.chatCompletion([
-        { role: 'system', content: 'You are a precise document processing assistant that returns only valid JSON.' },
+        { 
+          role: 'system', 
+          content: 'You are a precise document processing assistant that returns only valid JSON. Never include explanatory text before or after the JSON.' 
+        },
         { role: 'user', content: prompt }
       ]);
 
-      const extractedData = JSON.parse(response.choices[0].message.content);
+      const extractedData = this.parseJSONResponse(response.choices[0].message.content);
       
+      // Validate the response structure
+      if (!extractedData || typeof extractedData !== 'object') {
+        throw new Error('Invalid response structure');
+      }
+
       return {
         success: true,
         data: extractedData,
@@ -60,15 +94,21 @@ Return only valid JSON without any additional text or formatting.
       console.error('Document extraction failed:', error);
       return {
         success: false,
-        error: error.message,
+        error: `Document extraction failed: ${error.message}`,
         data: null
       };
     }
   }
 
   async validateClaimInformation(claimData) {
-    const prompt = `
-As an insurance claims validator, review the following extracted claim information for completeness and validity:
+    if (!claimData || typeof claimData !== 'object') {
+      return {
+        success: false,
+        error: 'Invalid claim data provided'
+      };
+    }
+
+    const prompt = `As an insurance claims validator, review the following extracted claim information for completeness and validity:
 
 Claim Data:
 ${JSON.stringify(claimData, null, 2)}
@@ -76,7 +116,7 @@ ${JSON.stringify(claimData, null, 2)}
 Provide validation results in the following JSON format:
 {
   "validationStatus": "valid|incomplete|invalid",
-  "validationScore": 0-100,
+  "validationScore": 85,
   "issues": [
     {
       "field": "fieldName",
@@ -89,24 +129,30 @@ Provide validation results in the following JSON format:
   "estimatedProcessingTime": "immediate|1-3 days|3-7 days|investigation required"
 }
 
-Return only valid JSON without any additional text or formatting.
-`;
+Return ONLY valid JSON, no other text.
+
+JSON:`;
 
     try {
       const response = await this.client.chatCompletion([
-        { role: 'system', content: 'You are a thorough claims validation specialist.' },
+        { 
+          role: 'system', 
+          content: 'You are a thorough claims validation specialist who returns only valid JSON.'
+        },
         { role: 'user', content: prompt }
       ]);
 
+      const validation = this.parseJSONResponse(response.choices[0].message.content);
+
       return {
         success: true,
-        validation: JSON.parse(response.choices[0].message.content)
+        validation: validation
       };
     } catch (error) {
       console.error('Validation failed:', error);
       return {
         success: false,
-        error: error.message
+        error: `Validation failed: ${error.message}`
       };
     }
   }

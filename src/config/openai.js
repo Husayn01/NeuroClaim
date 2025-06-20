@@ -1,18 +1,12 @@
 // config/openai.js
 const getOpenAIConfig = () => {
-  // Safe way to access environment variables in browser
-  let apiKey = '';
-  try {
-    apiKey = process?.env?.REACT_APP_OPENAI_API_KEY || '';
-  } catch (e) {
-    // Fallback for environments where process is not available
-    apiKey = '';
-  }
+  // Access environment variables safely in React
+  const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   
   return {
     apiKey,
     baseURL: 'https://api.openai.com/v1',
-    model: 'gpt-4',
+    model: 'gpt-4o-mini', // Changed to more accessible model
     temperature: 0.3,
     maxTokens: 2000
   };
